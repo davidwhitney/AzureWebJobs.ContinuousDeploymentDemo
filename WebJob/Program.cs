@@ -1,34 +1,25 @@
-﻿using System;
-using System.IO;
-using System.Threading;
+﻿using System.Threading;
+using log4net;
+using log4net.Config;
 
 namespace WebJob
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static readonly ILog log = LogManager.GetLogger("WebJob");
+
+        private static void Main(string[] args)
         {
-            const string filename = "webjoblog.txt";
+            XmlConfigurator.Configure();
 
-            if (!File.Exists(filename))
-            {
-                File.Delete(filename);
-            }
-
-            var fs = File.Create(filename);
-            fs.Close();
-
-            
             var i = 1;
             while (true)
             {
-                using (var w = File.AppendText(filename))
-                {
-                    var msg = "Iteration: " + i;
-                    
-                    Console.WriteLine(msg);
-                    w.WriteLine(msg);
-                }
+
+                var msg = "Iteration: " + i;
+
+                log.Debug(msg);
+
 
                 i++;
 
@@ -39,7 +30,7 @@ namespace WebJob
                     break;
                 }
             }
-            
+
         }
     }
 }
